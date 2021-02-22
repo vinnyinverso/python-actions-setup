@@ -1,0 +1,26 @@
+name: Dev Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    # - name: Bump version and push tag
+    #   uses: anothrNick/github-tag-action@1.34.0
+    #   env:
+    #     DEFAULT_BUMP: patch
+    #     INITIAL_VERSION: 1.0.0
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     WITH_V: true
+    #     RELEASE_BRANCHES: release
+    #     PRERELEASE_SUFFIX: dev
+    - name: Release Drafter
+      uses: release-drafter/release-drafter@v5.12.1
