@@ -21,7 +21,6 @@ develop:
 
 lint:
 	echo "Lint"
-	flake8 harmony
 
 test:
 	echo "Test"
