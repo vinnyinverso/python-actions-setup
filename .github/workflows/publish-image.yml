@@ -1,4 +1,4 @@
-name: Publish to ghcr.io
+name: Publish to DockerHub
 
 on:
   push:
@@ -7,8 +7,11 @@ on:
     tags:
       - v*
 env:
-  # Named after the repo by default
-  IMAGE_NAME: ${{ github.repository }}
+  REPOSITORY_USER: bilts
+  REGISTRY_PREFIX: harmonyservices
+  REPOSITORY_PREFIX: nasa/harmony-
+  # Or specify a full image name not derived from the repo
+  # IMAGE_ID: custom-org/custom-image-name
 
 jobs:
   push:
@@ -19,15 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        run: docker build . --file Dockerfile --tag "${GITHUB_REPOSITORY}" --label "runnumber=${GITHUB_RUN_ID}"
       - name: Log into registry
-        run: echo "${{ secrets.DOCKERHUB }}" | docker login -u bilts --password-stdin
+        run: echo "${{ secrets.DOCKERHUB }}" | docker login -u "${REPOSITORY_USER}" --password-stdin
       - name: Push image
         run: |
-          IMAGE_ID=harmonyservices/$IMAGE_NAME
-
-          # Ensure lowercase (does nothing in practice)
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=${IMAGE_ID:-$(echo "${GITHUB_REPOSITORY}" | sed "s,^${REPOSITORY_PREFIX},${REGISTRY_PREFIX},g")}
 
           # For tagged versions, translate e.g. "refs/tags/v1.2.3" -> "1.2.3"
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
