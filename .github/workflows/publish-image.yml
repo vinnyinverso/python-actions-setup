@@ -11,7 +11,7 @@ env:
   REGISTRY_PREFIX: harmonyservices
   REPOSITORY_PREFIX: nasa/harmony-
   # Or specify a full image name not derived from the repo
-  # IMAGE_ID: custom-org/custom-image-name
+  # IMAGE_NAME: custom-org/custom-image-name
 
 jobs:
   push:
@@ -27,7 +27,7 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB }}" | docker login -u "${REPOSITORY_USER}" --password-stdin
       - name: Push image
         run: |
-          IMAGE_ID=${IMAGE_ID:-$(echo "${GITHUB_REPOSITORY}" | sed "s,^${REPOSITORY_PREFIX},${REGISTRY_PREFIX},g")}
+          IMAGE_NAME=${IMAGE_NAME:-$(echo "${GITHUB_REPOSITORY}" | sed "s,^${REPOSITORY_PREFIX},${REGISTRY_PREFIX},g")}
 
           # For tagged versions, translate e.g. "refs/tags/v1.2.3" -> "1.2.3"
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
@@ -35,7 +35,8 @@ jobs:
 
           # For the main branch, use "latest" as the version
           [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+
+          IMAGE_ID="${IMAGE_NAME}:${VERSION}"
+          echo "Pushing ${IMAGE_ID}"
+          docker tag "${GITHUB_REPOSITORY}" "${IMAGE_NAME}"
+          docker push "${IMAGE_NAME}"
