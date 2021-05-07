@@ -38,5 +38,5 @@ jobs:
 
           IMAGE_ID="${IMAGE_NAME}:${VERSION}"
           echo "Pushing ${IMAGE_ID}"
-          docker tag "${GITHUB_REPOSITORY}" "${IMAGE_NAME}"
-          docker push "${IMAGE_NAME}"
+          docker tag "${GITHUB_REPOSITORY}" "${IMAGE_ID}"
+          docker push "${IMAGE_ID}"
