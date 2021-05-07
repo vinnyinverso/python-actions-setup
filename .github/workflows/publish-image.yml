@@ -8,7 +8,7 @@ on:
       - v*
 env:
   REPOSITORY_USER: bilts
-  REGISTRY_PREFIX: harmonyservices
+  REGISTRY_PREFIX: harmonyservices/
   REPOSITORY_PREFIX: bilts/python- # nasa/harmony-
   # Or specify a full image name not derived from the repo
   # IMAGE_NAME: custom-org/custom-image-name
