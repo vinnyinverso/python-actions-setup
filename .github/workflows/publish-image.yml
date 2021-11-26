@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    tags:
-      - v*
+  release:
+    types: [published]
 env:
   REPOSITORY_USER: bilts
   REGISTRY_PREFIX: harmonyservices/
